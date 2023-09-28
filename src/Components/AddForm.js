@@ -14,7 +14,7 @@ import {
   mainReducer,
 } from "../Utils/MainReducer";
 import { FormContainer } from "./AddForm.styles";
-
+import axios from 'axios'
 const initialState = {
   title: "",
   author: "",
@@ -93,6 +93,12 @@ const AddForm = () => {
     }
     else{
       alert("Success!")
+      axios.post('http://localhost:5555/addbook',{
+        title : formState.title,
+        isbn : formState.isbn,
+        author : formState.author,
+        genre : formState.genre
+      }).then(res => console.log(`Response : ${response}`)).catch(err => console.log(`Error : ${err}`))
     }
   };
 
