@@ -12,9 +12,9 @@ import {
   UPDATE_TITLE,
   UPDATE_TITLE_ERROR,
   mainReducer,
-} from "../Utils/MainReducer";
+} from "../../Utils/MainReducer";
 import { FormContainer } from "./AddForm.styles";
-import axios from 'axios'
+import axios from "axios";
 const initialState = {
   title: "",
   author: "",
@@ -36,69 +36,71 @@ const AddForm = () => {
         type: UPDATE_TITLE_ERROR,
         payload: true,
       });
-      
+
       return false;
     } else if (formState.titleError === true) {
       dispatch({
         type: UPDATE_TITLE_ERROR,
         payload: false,
       });
-    } 
+    }
     if (formState.author === "") {
       dispatch({
         type: UPDATE_AUTHOR_ERROR,
         payload: true,
       });
-      
+
       return false;
     } else if (formState.authorError === true) {
       dispatch({
         type: UPDATE_AUTHOR_ERROR,
         payload: false,
       });
-    } 
+    }
     if (formState.isbn === "") {
       dispatch({
         type: UPDATE_ISBN_ERROR,
         payload: true,
       });
-      
-      return false
+
+      return false;
     } else if (formState.isbnError === true) {
       dispatch({
         type: UPDATE_ISBN_ERROR,
         payload: false,
       });
     }
-     if (formState.genre === "") {
+    if (formState.genre === "") {
       dispatch({
         type: UPDATE_GENRE_ERROR,
         payload: true,
       });
-      
-      return false
-    } else if(formState.genreError === true){
+
+      return false;
+    } else if (formState.genreError === true) {
       dispatch({
         type: UPDATE_GENRE_ERROR,
         payload: false,
       });
     }
-    
-    return true
+
+    return true;
   };
 
   const handleSubmit = () => {
     if (!validateForm()) {
       alert("Please fill all fields.");
-    }
-    else{
-      alert("Success!")
-      axios.post('http://localhost:5555/addbook',{
-        title : formState.title,
-        isbn : formState.isbn,
-        author : formState.author,
-        genre : formState.genre
-      }).then(res => console.log(`Response : ${response}`)).catch(err => console.log(`Error : ${err}`))
+    } else {
+      alert("Success!");
+      axios
+        .post("http://localhost:5555/addbook", {
+          title: formState.title,
+          isbn: formState.isbn,
+          author: formState.author,
+          genre: formState.genre,
+        })
+        .then((res) => console.log(`Response : ${response}`))
+        .catch((err) => console.log(`Error : ${err}`));
     }
   };
 
