@@ -1,6 +1,27 @@
+import { jsx } from '@emotion/react'
 import {DataGrid} from '@mui/x-data-grid'
+import axios from 'axios'
+import { useEffect, useState } from 'react';
+
+
+  
 
 const BookDataGrid = () => {
+    const [books, setBooks] = useState([])
+    
+    useEffect(() => {
+        const fetchStartData = async () => {
+            try {
+              const response = await axios.get('http://localhost:5555/start');
+              setBooks(response.data); 
+            } catch (err) {
+              console.error(err);
+            }
+          };
+          fetchStartData()
+          
+    }, [])
+     
     const dataGridColumns = [
         {
             field : "isbn",
@@ -15,8 +36,8 @@ const BookDataGrid = () => {
             editable : true
         },
         {
-            field : "Author",
-            headerName : "author",
+            field : "author",
+            headerName : "Author",
             width : 100,
             editable : true
         },
@@ -27,28 +48,11 @@ const BookDataGrid = () => {
             editable: true
         }
     ]
-    const dataGridRows = [{
-        id : 1,
-        isbn : 1,
-        title : "Test title 1",
-        author : "Test author 1",
-        genre : "Test genre 1"
-    },
-    {
-        id : 2,
-        isbn : 2,
-        title : "Test title 2",
-        author : "Test author 2",
-        genre : "Test genre 2"
-    },
-    {
-        id : 3,
-        isbn : 3,
-        title : "Test title 3",
-        author : "Test author 3",
-        genre : "Test genre 3"
-    }
-]
+    
+    const dataGridRows = books.length === 0 ? [] : books.map((book) =>{
+        book["id"] = book._id
+        return book
+    })
   return (
     <DataGrid rows={dataGridRows} columns={dataGridColumns} initialState={{
         pagination: {
@@ -60,6 +64,7 @@ const BookDataGrid = () => {
       pageSizeOptions={[5]}
       checkboxSelection
       disableRowSelectionOnClick/>
+    
   )
 }
 

@@ -15,6 +15,7 @@ import {
 } from "../../Utils/MainReducer";
 import { FormContainer } from "./AddForm.styles";
 import axios from "axios";
+import TopNavBar from '../../Components/TopNavBar/TopNavBar'
 const initialState = {
   title: "",
   author: "",
@@ -105,6 +106,8 @@ const AddForm = () => {
   };
 
   return (
+    <>
+    <TopNavBar />
     <FormContainer>
       <TextField
         error={formState.titleError}
@@ -165,7 +168,9 @@ const AddForm = () => {
       >
         Save
       </Button>
+      
     </FormContainer>
+    </>
   );
 };
 
