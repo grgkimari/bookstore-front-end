@@ -1,5 +1,5 @@
 import SaveIcon from "@mui/icons-material/Save";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import React, { useReducer } from "react";
 import {
@@ -100,7 +100,7 @@ const AddForm = () => {
           author: formState.author,
           genre: formState.genre,
         })
-        .then((res) => console.log(`Response : ${response}`))
+        .then((res) => console.log(`Response : ${res}`))
         .catch((err) => console.log(`Error : ${err}`));
     }
   };
@@ -109,6 +109,7 @@ const AddForm = () => {
     <>
     <TopNavBar />
     <FormContainer>
+      <Typography variant="h4"><center>Add Book</center></Typography>
       <TextField
         error={formState.titleError}
         name="title"
