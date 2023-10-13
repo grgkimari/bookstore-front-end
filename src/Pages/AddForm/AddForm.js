@@ -1,7 +1,7 @@
 import SaveIcon from "@mui/icons-material/Save";
 import { Button, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import React, { useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import {
   UPDATE_AUTHOR,
   UPDATE_AUTHOR_ERROR,
@@ -15,7 +15,8 @@ import {
 } from "../../Utils/MainReducer";
 import { FormContainer } from "./AddForm.styles";
 import axios from "axios";
-import TopNavBar from '../../Components/TopNavBar/TopNavBar'
+import TopNavBar from "../../Components/TopNavBar/TopNavBar";
+import AlertNotification from "../../Components/AlertNotification/AlertNotification";
 const initialState = {
   title: "",
   author: "",
@@ -29,7 +30,22 @@ const initialState = {
 
 const AddForm = () => {
   const [formState, dispatch] = useReducer(mainReducer, initialState);
-  console.log(`Form State : ${JSON.stringify(formState)}`);
+  const [alertState, setAlertState] = useState({
+    showAlert: false,
+    message: "",
+    title: "",
+    severity: "",
+  });
+
+  
+ 
+
+
+  console.log(
+    `Form State : ${JSON.stringify(formState)}\nAlertState : ${JSON.stringify(
+      alertState
+    )}`
+  );
 
   const validateForm = () => {
     if (formState.title === "") {
@@ -92,85 +108,122 @@ const AddForm = () => {
     if (!validateForm()) {
       alert("Please fill all fields.");
     } else {
-      alert("Success!");
-      axios
-        .post("http://localhost:5555/addbook", {
+      try{
+      const res = axios.post("http://localhost:5555/addbook", {
           title: formState.title,
           isbn: formState.isbn,
           author: formState.author,
           genre: formState.genre,
         })
-        .then((res) => console.log(`Response : ${res}`))
-        .catch((err) => console.log(`Error : ${err}`));
+      
+        setAlertState({
+          showAlert: true,
+          message: "Book Saved Succcesfully",
+          title: "Success",
+          severity: "success",
+        });
+        console.log(`Response : ${res}`);
+        setTimeout(() => {
+          setAlertState({
+            showAlert: false,
+            message: "",
+            title: "",
+            severity: "",
+          })
+        }, 7000)
+      }
+        catch (err) {
+          setAlertState({
+            showAlert: true,
+            message: "Couldn't save!",
+            title: "Save Error",
+            severity: "error",
+          })
+          setTimeout(() => {
+            setAlertState({
+              showAlert: false,
+              message: "",
+              title: "",
+              severity: "",
+            })
+          }, 7000)
+
+        }
+        
+          
+        }
+        
     }
-  };
+  
 
   return (
     <>
-    <TopNavBar />
-    <FormContainer>
-      <Typography variant="h4"><center>Add Book</center></Typography>
-      <TextField
-        error={formState.titleError}
-        name="title"
-        id="title"
-        label="Title"
-        value={formState.title}
-        onChange={(event) => {
-          dispatch({
-            type: UPDATE_TITLE,
-            payload: event.target.value,
-          });
-        }}
-      />
-      <TextField
-        error={formState.authorError}
-        name="author"
-        id="author"
-        label="Author"
-        value={formState.author}
-        onChange={(event) => {
-          dispatch({
-            type: UPDATE_AUTHOR,
-            payload: event.target.value,
-          });
-        }}
-      />
-      <TextField
-        error={formState.isbnError}
-        name="isbn"
-        id="isbn"
-        label="ISBN"
-        value={formState.isbn}
-        onChange={(event) => {
-          dispatch({
-            type: UPDATE_ISBN,
-            payload: event.target.value,
-          });
-        }}
-      />
-      <TextField
-        error={formState.genreError}
-        name="genre"
-        id="genre"
-        label="Genre"
-        value={formState.genre}
-        onChange={(event) => {
-          dispatch({
-            type: UPDATE_GENRE,
-            payload: event.target.value,
-          });
-        }}
-      />
-      <Button
-        onClick={handleSubmit}
-        variant="contained"
-        startIcon={<SaveIcon />}
-      >
-        Save
-      </Button>
-      
-    </FormContainer>
+      <TopNavBar />
+      <FormContainer>
+        {alertState.showAlert ? <AlertNotification {...alertState} /> : null}
+        <Typography variant="h4">
+          <center>Add Book</center>
+        </Typography>
+        <TextField
+          error={formState.titleError}
+          name="title"
+          id="title"
+          label="Title"
+          value={formState.title}
+          onChange={(event) => {
+            dispatch({
+              type: UPDATE_TITLE,
+              payload: event.target.value,
+            });
+          }}
+        />
+        <TextField
+          error={formState.authorError}
+          name="author"
+          id="author"
+          label="Author"
+          value={formState.author}
+          onChange={(event) => {
+            dispatch({
+              type: UPDATE_AUTHOR,
+              payload: event.target.value,
+            });
+          }}
+        />
+        <TextField
+          error={formState.isbnError}
+          name="isbn"
+          id="isbn"
+          label="ISBN"
+          value={formState.isbn}
+          onChange={(event) => {
+            dispatch({
+              type: UPDATE_ISBN,
+              payload: event.target.value,
+            });
+          }}
+        />
+        <TextField
+          error={formState.genreError}
+          name="genre"
+          id="genre"
+          label="Genre"
+          value={formState.genre}
+          onChange={(event) => {
+            dispatch({
+              type: UPDATE_GENRE,
+              payload: event.target.value,
+            });
+          }}
+        />
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          startIcon={<SaveIcon />}
+        >
+          Save
+        </Button>
+      </FormContainer>
     </>
   );
 };
